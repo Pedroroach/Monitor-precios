@@ -1,0 +1,48 @@
+# Levantamiento de precios en GitHub Actions.
+# Etapa 1: solo se ejecuta a mano (pestaña Actions -> Levantamiento de precios -> Run workflow),
+# para probar qué cadenas se pueden leer desde los servidores de GitHub.
+# El resultado queda para descargar en la ejecución (no se guarda todavía en el repositorio).
+name: Levantamiento de precios
+
+on:
+  workflow_dispatch:
+    inputs:
+      solo:
+        description: 'Cadenas a leer, separadas por coma (vacío = todas las activas)'
+        required: false
+        default: ''
+
+jobs:
+  levantar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Instalar Python y Chromium
+        run: |
+          pip install -r requirements.txt
+          python -m playwright install --with-deps chromium
+
+      - name: Leer cadenas, limpiar y calcular
+        env:
+          SOLO: ${{ inputs.solo }}
+        run: |
+          if [ -n "$SOLO" ]; then python run.py --solo "$SOLO"; else python run.py; fi
+
+      - name: Guardar resultado para descargar
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: levantamiento
+          path: |
+            raw/
+            data/
+            logs/
+            reportes/
+          if-no-files-found: warn

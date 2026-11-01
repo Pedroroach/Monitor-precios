@@ -1,0 +1,123 @@
+# Qué productos cotiza el monitor.
+#
+# Por ahora trae el ejemplo de Ann (vacuno congelado). En la Etapa 2 se reemplaza por los productos de Pedro.
+#
+# Cada producto tiene:
+#   busquedas:  lo que se escribe en el buscador de cada supermercado
+#   incluir:    el nombre del producto debe tener al menos una de estas palabras (o pedazos de palabra)
+#   excluir:    si el nombre tiene alguna de estas, se descarta
+#   requiere:   (opcional) el nombre debe tener además al menos una de estas
+#   solo_congelado:      (opcional) true = descarta lo que no sea congelado
+#   asumir_congelado:    (opcional) true = este producto siempre se considera congelado
+#
+# Las mayúsculas y los tildes no importan: "salmon" también descarta "Salmón".
+# Para una palabra completa (que no sea pedazo de otra) se escribe \b antes y después: '\bres\b'
+# deja fuera "fresco" pero atrapa "carne de res".
+
+# Palabras que descartan un producto en cualquier categoría
+excluir_global:
+  - pollo
+  - pechuga
+  - pavo
+  - salmon
+  - merluza
+  - reineta
+  - camaron
+  - pescad
+  - soya
+  - vegetal
+  - verdura
+  - veggie
+  - vegan
+  - plant
+  - sucedaneo
+  - beyond
+  - perro
+  - gato
+  - mascota
+  - empanada
+  - pizza
+  - ravioli
+  - sorrentino
+  - plato
+  - lasa
+  - sandwich
+  - 'pan '
+  - queso crema
+  - caldo
+  - sopa
+  - salsa
+  - pasta
+  - condimento
+  - alino
+  - pure
+  - pascualina
+  - arroz
+  - base para
+  - chocolate
+  - 'mani '
+  - ositos
+  - rolls
+  - zapallo
+  - durazno
+  - tomate
+  - pimienta
+  - canela
+  - curcuma
+  - nuez
+  - nacho
+  - chipotle
+  - pastelera
+  - sadia crocante
+  - nuggets sadia
+
+productos:
+  - nombre: Hamburguesa
+    busquedas: [hamburguesa vacuno]
+    incluir: [hamburgues]
+    requiere: [vacuno, beef, angus, wagyu, posta, '\bres\b', novillo, brisket, chuck, carne]
+    solo_congelado: true
+
+  - nombre: Churrasco
+    busquedas: [churrasco vacuno]
+    incluir: [churrasc]
+    excluir: ['^(?!.*(vacuno|beef)).*cerdo']   # cerdo sin vacuno
+    solo_congelado: true
+
+  - nombre: Molida
+    busquedas: [carne molida]
+    incluir: [molida]
+    requiere: [vacuno, beef, angus, wagyu, posta, '\bres\b', novillo, brisket, chuck, carne]
+    solo_congelado: true
+
+  - nombre: Crocante
+    busquedas: [crocante vacuno]
+    incluir: [crocant]
+    requiere: [vacuno, beef, angus, wagyu, posta, '\bres\b', novillo, brisket, chuck, carne]
+    solo_congelado: true
+    asumir_congelado: true
+
+  - nombre: Nugget
+    busquedas: [nuggets vacuno]
+    incluir: [nugget]
+    requiere: [vacuno, beef, angus, wagyu, posta, '\bres\b', novillo, brisket, chuck, carne]
+    solo_congelado: true
+    asumir_congelado: true
+
+  - nombre: Cubitos
+    busquedas: [cubitos vacuno]
+    incluir: [cubito, en cubos, '\bcubos\b']
+    requiere: [vacuno, beef, angus, wagyu, posta, '\bres\b', novillo, brisket, chuck, carne]
+    solo_congelado: true
+
+  - nombre: Tiritas
+    busquedas: [tiritas vacuno]
+    incluir: [tirita, '\btiras\b', strip]
+    requiere: [vacuno, beef, angus, wagyu, posta, '\bres\b', novillo, brisket, chuck, carne]
+    solo_congelado: true
+
+  - nombre: Mechada
+    busquedas: [carne mechada]
+    incluir: [mechad]
+    requiere: [vacuno, beef, angus, wagyu, posta, '\bres\b', novillo, brisket, chuck, carne]
+    solo_congelado: true

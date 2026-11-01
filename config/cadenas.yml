@@ -1,0 +1,57 @@
+# Qué supermercados lee el monitor.
+#
+#   activa: true/false  → para dejar de leer una cadena sin borrarla
+#   forma:
+#     pedir    = abre el sitio una vez y desde ahí pide los resultados de cada búsqueda
+#     navegar  = abre cada búsqueda como una persona (Líder no permite la otra forma)
+#   max_paginas: cuántas páginas de resultados leer por búsqueda, como máximo
+#   congelado_si_categoria: cómo reconoce la cadena un producto congelado en su categoría web
+#
+# Agregar una cadena nueva requiere además escribirle su lector en extractores.js.
+
+cadenas:
+  jumbo:
+    nombre: Jumbo
+    activa: true
+    forma: pedir
+    url_inicio: https://www.jumbo.cl/busqueda?ft=leche
+    url_base: https://www.jumbo.cl
+    max_paginas: 2
+    congelado_si_categoria: congelad
+
+  santaisabel:
+    nombre: Santa Isabel
+    activa: true
+    forma: pedir
+    url_inicio: https://www.santaisabel.cl/busqueda?ft=leche
+    url_base: https://www.santaisabel.cl
+    max_paginas: 2
+    congelado_si_categoria: congelad
+
+  unimarc:
+    nombre: Unimarc
+    activa: true
+    forma: pedir
+    url_inicio: https://www.unimarc.cl/search?q=leche
+    url_base: https://www.unimarc.cl
+    max_paginas: 1
+    congelado_si_categoria: congelad
+
+  tottus:
+    nombre: Tottus
+    activa: true
+    forma: pedir
+    url_inicio: https://www.tottus.cl/tottus-cl/buscar?Ntt=leche
+    url_base: https://www.tottus.cl/tottus-cl/articulo/
+    max_paginas: 1
+    congelado_si_categoria: '^J0503'   # Tottus usa códigos de categoría; J0503 = congelados
+
+  lider:
+    nombre: Lider
+    activa: true
+    forma: navegar
+    url_inicio: https://super.lider.cl/search?q=leche
+    url_busqueda: https://super.lider.cl/search?q={q}
+    url_base: https://super.lider.cl
+    max_paginas: 2
+    congelado_si_categoria: congelad
