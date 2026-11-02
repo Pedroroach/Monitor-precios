@@ -37,7 +37,9 @@ jobs:
 
       - name: Muestra para comparar con los sitios
         if: always()
-        run: python muestra.py || true
+        run: |
+          python muestra.py || true
+          python verificar.py || true
 
       - name: Guardar resultado para descargar
         if: always()

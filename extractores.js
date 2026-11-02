@@ -16,8 +16,8 @@
 
   // ---------- JUMBO ----------
   const grab = (s,start) => { let d=0,inS=false,esc=false; for (let k=start;k<s.length;k++){ const c=s[k]; if(inS){ if(esc)esc=false; else if(c==='\\')esc=true; else if(c==='"')inS=false; continue;} if(c==='"')inS=true; else if(c==='{')d++; else if(c==='}'){ d--; if(d===0) return s.slice(start,k+1);} } return null; };
-  MV.jumboQ = async (q, page=1) => {
-    const h = await (await fetch('/busqueda?ft='+encodeURIComponent(q)+'&page='+page)).text();
+  // Jumbo (y Santa Isabel desde nov-2026) dibujan la página con Next.js: los productos vienen en self.__next_f
+  MV.nextProductos = (h) => {
     const s = [...h.matchAll(/self\.__next_f\.push\(\[1,"(.*?)"\]\)<\/script>/gs)].map(m=>{try{return JSON.parse('"'+m[1]+'"')}catch(e){return ''}}).join('');
     const catMap = {}; for (const m of s.matchAll(/"href":"(\/[^"]+\/p)"[^}]*?"data-gtm-product-click":"((?:\\.|[^"\\])*)"/g)) { try{ catMap[m[1]] = JSON.parse(JSON.parse('"'+m[2]+'"')).category }catch(e){} }
     const out=[]; const seen=new Set(); let idx=0;
@@ -27,11 +27,12 @@
       const url = '/'+p.slug+'/p';
       out.push({name:it.name, brand:p.brand, price:it.price, list:it.listPrice, ppk:it.ppumMeasurementUnit==='kg'?it.ppumPrice:null, ppkList:it.ppumMeasurementUnit==='kg'?it.ppumListPrice:null, unit:it.measurementUnit, kgUn:it.measurementUnitUn==='kg'?it.unitMultiplierUn:null, stock:it.stock, promo:promos.join(' | '), url, cat:catMap[url]||''}); }
     return out; };
+  MV.jumboQ = async (q, page=1) => MV.nextProductos(await (await fetch('/busqueda?ft='+encodeURIComponent(q)+'&page='+page)).text());
 
   // ---------- SANTA ISABEL ----------
   MV.santaisabelQ = async (q, page=1) => {
     const h = await (await fetch('/busqueda?ft='+encodeURIComponent(q)+'&page='+page)).text();
-    const m = h.match(/__renderData = (".*?");/s); if (!m) return [];
+    const m = h.match(/__renderData = (".*?");/s); if (!m) return MV.nextProductos(h);  // sitio nuevo (igual a Jumbo)
     const d = JSON.parse(JSON.parse(m[1])); const prods = d.plp?.plp_products?.products || [];
     return prods.map(p => { const it=p.items[0]; const o=it.sellers[0].commertialOffer;
       let pd={}; try{ const g=p.specificationGroups.find(g=>g.name==='Configuraciones'); pd=JSON.parse(g.specifications.find(s=>s.name==='ProductData').values[0]); }catch(e){}
