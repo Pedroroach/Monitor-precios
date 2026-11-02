@@ -6,6 +6,7 @@
 #     navegar  = abre cada búsqueda como una persona (Líder no permite la otra forma)
 #   max_paginas: cuántas páginas de resultados leer por búsqueda, como máximo
 #   congelado_si_categoria: cómo reconoce la cadena un producto congelado en su categoría web
+#   url_diagnostico: (opcional) qué página revisar si la cadena no trae nada, para saber por qué
 #
 # Agregar una cadena nueva requiere además escribirle su lector en extractores.js.
 
@@ -16,6 +17,7 @@ cadenas:
     forma: pedir
     url_inicio: https://www.jumbo.cl/busqueda?ft=leche
     url_base: https://www.jumbo.cl
+    url_diagnostico: /busqueda?ft={q}
     max_paginas: 2
     congelado_si_categoria: congelad
 
@@ -25,6 +27,7 @@ cadenas:
     forma: pedir
     url_inicio: https://www.santaisabel.cl/busqueda?ft=leche
     url_base: https://www.santaisabel.cl
+    url_diagnostico: /busqueda?ft={q}
     max_paginas: 2
     congelado_si_categoria: congelad
 
@@ -43,6 +46,7 @@ cadenas:
     forma: pedir
     url_inicio: https://www.tottus.cl/tottus-cl/buscar?Ntt=leche
     url_base: https://www.tottus.cl/tottus-cl/articulo/
+    url_diagnostico: /tottus-cl/buscar?Ntt={q}
     max_paginas: 1
     congelado_si_categoria: '^J0503'   # Tottus usa códigos de categoría; J0503 = congelados
 

@@ -52,6 +52,9 @@ def leer_pidiendo(page, c, qs, fh):
         log(f'  {c["clave"]} búsqueda con error -> {e}', fh)
     if res['errores'] and len(res['errores']) == len(qs):
         raise RuntimeError(f'{c["clave"]}: fallaron todas las búsquedas.')
+    if not res['filas'] and c.get('url_diagnostico'):
+        d = page.evaluate('(u) => MV.diag(u)', c['url_diagnostico'].format(q=quote(qs[0])))
+        log(f'  {c["clave"]} diagnóstico (página: "{page.title()}") -> {d}', fh)
     return res['filas']
 
 

@@ -86,5 +86,11 @@
         url:'https://super.lider.cl'+p.canonicalUrl, cat:(p.category?.path||[]).map(x=>x.name).join('/')}); });
     return {total: sr.aggregatedCount ?? sr.count ?? null, items}; };
 
+  // Diagnóstico: cuando una cadena no trae nada, mirar qué respondió el sitio (no intenta saltarse nada).
+  MV.diag = async (url) => { try { const r = await fetch(url); const h = await r.text();
+    const t = (h.match(/<title[^>]*>([^<]*)/i)||[])[1]||'';
+    return {status: r.status, largo: h.length, titulo: t.trim().slice(0,80), renderData: h.includes('__renderData'), nextData: h.includes('__NEXT_DATA__'), next_f: h.includes('self.__next_f')}; }
+    catch (e) { return {error: e.message}; } };
+
   window.MV = MV;
 })();
