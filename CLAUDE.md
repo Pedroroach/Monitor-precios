@@ -32,7 +32,12 @@ por etapas: 1 nube y configuración · 2 productos y cadenas de Pedro · 3 autom
 
 ## Estado
 - Etapa 1: código adaptado. El cálculo se validó contra la foto de Ann del 2026-10-02 (225 de 225 productos con
-  el mismo peso, precios y $/kg). Lectura desde GitHub Actions: pendiente de la primera ejecución.
+  el mismo peso, precios y $/kg). Primera lectura desde GitHub Actions (2026-11-02): Jumbo, Santa Isabel y Unimarc OK
+  (9 de 9 precios iguales a la ficha del producto); Tottus responde 403 y Líder pide "Robot or human?" → bloqueadas
+  desde servidores. Santa Isabel cambió su sitio a Next.js (igual a Jumbo); su lector soporta ambos formatos.
+- `verificar.py` abre la ficha de 3 productos por cadena y compara su precio con el levantamiento (corre en el workflow).
+- Desde esta sesión en la nube de Claude no se puede entrar a los sitios ni descargar los artifacts de Actions:
+  las pruebas se leen desde el log de la ejecución (gh api .../actions/jobs/<id>/logs).
 
 ## Límites conocidos
 - Búsqueda por palabra clave: puede faltar algún producto.
