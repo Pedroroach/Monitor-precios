@@ -48,7 +48,8 @@ def lider_kg(name):
 def parse_l(name, size=''):
     """Litros en el nombre o formato: '1 L', '1 lt', '200 ml', '500 cc', '6 x 1 L'."""
     s = (name + ' ' + (size or '')).lower().replace(',', '.')
-    m = re.search(r'(\d+)\s*x\s*(\d+(?:\.\d+)?)\s*(l|lt|lts|litros?|ml|cc)\b', s)
+    m = (re.search(r'(\d+)\s*x\s*(\d+(?:\.\d+)?)\s*(l|lt|lts|litros?|ml|cc)\b', s)
+         or re.search(r'(\d+)\s*(?:un|unid|unidades)\.?\s*de\s*(\d+(?:\.\d+)?)\s*(l|lt|lts|litros?|ml|cc)\b', s))
     if m:
         v = float(m.group(2)) / (1000 if m.group(3) in ('ml', 'cc') else 1)
         return int(m.group(1)) * v
@@ -148,7 +149,8 @@ def cantidad(r, c, unidad):
         hint = r['kg_unidad']
     else:
         q_nombre = parse_l(nombre, formato) if unidad == 'l' else parse_un(nombre, formato)
-        ppu = r.get('ppu') if UNIDADES_CADENA.get(str(r.get('ppu_unidad') or '').lower()) == unidad else None
+        # por unidad: las cadenas publican el precio "por unidad" = por envase, no por huevo; se usa el nombre
+        ppu = r.get('ppu') if unidad == 'l' and UNIDADES_CADENA.get(str(r.get('ppu_unidad') or '').lower()) == 'l' else None
         hint = None
     q = None
     if ppu and price:

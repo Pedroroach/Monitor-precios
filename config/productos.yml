@@ -24,20 +24,20 @@ productos:
     busquedas: [harina sin polvos de hornear]
     incluir: ['^harina']
     requiere: [sin polvo]
-    excluir: [integral, maiz, almendra, coco, arroz, avena, garbanzo, sin gluten, premezcla, mezcla]
+    excluir: [integral, maiz, almendra, coco, arroz, avena, garbanzo, sin gluten, orgran, premezcla, mezcla]
 
   - nombre: Harina con polvos de hornear
     unidad: kg
     busquedas: [harina con polvos de hornear]
     incluir: ['^harina']
     requiere: [con polvo]
-    excluir: [integral, maiz, almendra, coco, arroz, avena, garbanzo, sin gluten, premezcla, mezcla]
+    excluir: [integral, maiz, almendra, coco, arroz, avena, garbanzo, sin gluten, orgran, premezcla, mezcla]
 
   - nombre: Azúcar granulada
     unidad: kg
     busquedas: [azucar granulada]
     incluir: ['^azucar']
-    excluir: [flor, impalpable, glass, rubia, morena, mascabo, rubio, light, stevia, sucralosa, endulzante, cubo, sachet, sobre]
+    excluir: [flor, impalpable, glass, rubia, morena, mascabo, rubio, organic, dorad, light, stevia, sucralosa, endulzante, cubo, sachet, sobre]
 
   - nombre: Azúcar flor
     unidad: kg
@@ -57,14 +57,14 @@ productos:
     unidad: un
     busquedas: [huevos]
     incluir: ['^huevo']
-    excluir: [codorniz, chocolate, pascua, sorpresa, polvo, deshidratad, liquid, clara, yema, cocido]
+    excluir: [codorniz, vegan, chocolate, pascua, sorpresa, polvo, deshidratad, liquid, clara, yema, cocido, duro]
 
   - nombre: Leche entera
     unidad: l
     busquedas: [leche entera]
     incluir: ['^leche']
     requiere: [entera]
-    excluir: [polvo, condensada, evaporada, sin lactosa, cultivada, fermentada, sabor, chocolate, frutilla, vainilla, almendra, avena, soya, coco, semi, descremada]
+    excluir: [polvo, condensada, evaporada, sin lactosa, cultivada, fermentada, sabor, chocolate, frutilla, vainilla, almendra, avena, soya, coco, semi, descremada, cabra, proteina]
 
   - nombre: Crema de leche
     unidad: l
@@ -83,14 +83,14 @@ productos:
     unidad: kg
     busquedas: [manjar]
     incluir: ['^manjar']
-    excluir: [alfajor, galleta, torta, helado, barra, bombon, chocolate]
+    excluir: [alfajor, galleta, torta, helado, barra, bombon, chocolate, coco]
 
   - nombre: Chocolate para repostería
     unidad: kg
     busquedas: [chocolate reposteria, chocolate cobertura]
-    incluir: [chocolate]
-    requiere: [reposter, cobertura, fundir, bano de]
-    excluir: [helado, galleta, salsa, manjar, bombon, relleno, leche condensada, mani]
+    # cobertura o chocolate de repostería; el nombre debe empezar así (deja fuera waffles, brownies, tortas)
+    incluir: ['^cobertura.*(chocolat|bitter)', '^chocolate.*(reposter|cobertura|fundir)']
+    excluir: [glaseado, helado, galleta, salsa, relleno]
 
   - nombre: Cacao amargo en polvo
     unidad: kg
@@ -115,4 +115,4 @@ productos:
     unidad: kg
     busquedas: [queso crema]
     incluir: ['^queso crema']
-    excluir: [ciboulette, finas hierbas, salmon, ajo, pimienta, cebolla, aceituna, merken, tomate]
+    excluir: [ciboulette, finas hierbas, salmon, ajo, pimienta, cebolla, aceituna, merken, tomate, salame, morron, jamon]

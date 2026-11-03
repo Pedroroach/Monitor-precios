@@ -7,15 +7,19 @@ por etapas: 1 nube y configuración · 2 productos y cadenas de Pedro · 3 autom
 4 sugerido de dónde comprar · 5 página de precios en la app (app-pasteleria-matesic en Vercel).
 
 ## Cómo funciona
-- `config/productos.yml`: qué se busca (busquedas), qué se queda (incluir, requiere), qué se bota (excluir, excluir_global),
-  y si se exige congelado. Mayúsculas y tildes no importan; cada palabra es un pedazo de texto (o expresión regular).
+- `config/productos.yml`: canasta de repostería. Por producto: unidad de comparación (kg, l o un), qué se busca
+  (busquedas), qué se queda (incluir, requiere), qué se bota (excluir, excluir_global) y si se exige congelado.
+  Si varios productos calzan con un nombre, se prueba primero el de la búsqueda que lo trajo. Mayúsculas y tildes no importan; cada palabra es un pedazo de texto (o expresión regular).
 - `config/cadenas.yml`: qué cadenas se leen, si están activas y cómo se leen (`pedir` o `navegar`).
 - `scraper.py` + `extractores.js`: abre cada cadena en Chromium sin ventana y guarda TODO lo que trae cada búsqueda
   en `raw/<fecha>/<cadena>.json` (sin filtrar). `_resumen.json` dice qué cadena funcionó, falló o bloqueó.
   Jumbo, Santa Isabel, Unimarc y Tottus: forma `pedir` (fetch desde la propia página).
   Líder: forma `navegar` (bloquea fetch; se abre cada búsqueda y se lee __NEXT_DATA__).
-- `process.py`: filtra según productos.yml y calcula $/kg → `data/<fecha>.json` con `rows` (se quedan) y
-  `descartados` (con motivo). Si una cadena publica $/kg, se usa su peso salvo que sea implausible.
+- `process.py`: filtra según productos.yml y calcula el precio por unidad de medida (`pu_*`, con `cantidad` y `unidad`)
+  → `data/<fecha>.json` con `rows` (se quedan) y `descartados` (con motivo). Kg y litros: si la cadena publica precio por
+  esa unidad se usa su cantidad, salvo envase fuera de rango; si difiere >20% del nombre queda `cantidad_dudosa`.
+  Por unidad (huevos): siempre del nombre, porque las cadenas publican "por unidad" = por envase.
+- `revisar.py`: lista por producto lo que se quedó y lo descartado (corre en el workflow, se lee en el log).
 - `report.py`: Excel opcional en `reportes/` (no se sube al repositorio).
 - `run.py`: corre los tres pasos con la fecha de Chile. `--solo jumbo,tottus`, `--sin-excel`.
 - `.github/workflows/levantamiento.yml`: hoy solo manual (Run workflow); deja el resultado para descargar.
@@ -38,6 +42,10 @@ por etapas: 1 nube y configuración · 2 productos y cadenas de Pedro · 3 autom
 - `verificar.py` abre la ficha de 3 productos por cadena y compara su precio con el levantamiento (corre en el workflow).
 - Desde esta sesión en la nube de Claude no se puede entrar a los sitios ni descargar los artifacts de Actions:
   las pruebas se leen desde el log de la ejecución (gh api .../actions/jobs/<id>/logs).
+
+- Etapa 2 (en curso): canasta de 15 productos de repostería propuesta por Claude porque Pedro pidió elegir productos
+  alineados con una repostería; Pedro la revisa con la lista de encontrados y descartados. Cadenas: Jumbo, Santa Isabel,
+  Unimarc. Tottus y Líder apagadas (bloquean desde GitHub), se decide en la Etapa 3.
 
 ## Límites conocidos
 - Búsqueda por palabra clave: puede faltar algún producto.
