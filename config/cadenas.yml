@@ -42,7 +42,7 @@ cadenas:
 
   tottus:
     nombre: Tottus
-    activa: true
+    activa: false   # bloquea desde GitHub (responde 403). Se decide en la Etapa 3.
     forma: pedir
     url_inicio: https://www.tottus.cl/tottus-cl/buscar?Ntt=leche
     url_base: https://www.tottus.cl/tottus-cl/articulo/
@@ -52,7 +52,7 @@ cadenas:
 
   lider:
     nombre: Lider
-    activa: true
+    activa: false   # bloquea desde GitHub (pide "Robot or human?"). Se decide en la Etapa 3.
     forma: navegar
     url_inicio: https://super.lider.cl/search?q=leche
     url_busqueda: https://super.lider.cl/search?q={q}

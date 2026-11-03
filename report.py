@@ -16,6 +16,7 @@ import configuracion as cfg
 
 ROOT = str(cfg.ROOT)
 CATS = [p['nombre'] for p in cfg.productos()[0]]
+UNI = {p['nombre']: {'kg': 'kg', 'l': 'litro', 'un': 'unidad'}[p['unidad']] for p in cfg.productos()[0]}
 CHAINS = [c['nombre'] for c in cfg.cadenas(solo_activas=False).values()]
 
 F = 'Arial'
@@ -71,14 +72,14 @@ def header(ws, row, cols, widths=None):
 def ref_block(ws, r0, rows, titulo):
     ws.cell(row=r0, column=1, value=titulo).font = BOLD
     r = r0 + 1
-    header(ws, r, ['Categoría', 'SKUs', 'Mín $/kg', 'P25 $/kg', 'Mediana $/kg', 'P75 $/kg', 'Máx $/kg',
-                   'Mediana pagando oferta $/kg', '% SKUs en promo'])
+    header(ws, r, ['Categoría', 'SKUs', 'Mín $/u', 'P25 $/u', 'Mediana $/u', 'P75 $/u', 'Máx $/u',
+                   'Mediana pagando oferta $/u', '% SKUs en promo'])
     for cat in CATS:
         R = [x for x in rows if x['cat'] == cat]
-        pn = [x['ppk_normal'] for x in R if x['ppk_normal']]
-        pp = [x['ppk_promo_min'] or x['ppk_normal'] for x in R if x['ppk_normal']]
+        pn = [x['pu_normal'] for x in R if x['pu_normal']]
+        pp = [x['pu_promo_min'] or x['pu_normal'] for x in R if x['pu_normal']]
         r += 1
-        vals = [cat, len(R), min(pn) if pn else None, q(pn, .25), q(pn, .5), q(pn, .75), max(pn) if pn else None,
+        vals = [f'{cat} (por {UNI[cat]})', len(R), min(pn) if pn else None, q(pn, .25), q(pn, .5), q(pn, .75), max(pn) if pn else None,
                 q(pp, .5), (sum(1 for x in R if x['en_promo']) / len(R)) if R else None]
         for j, v in enumerate(vals, 1):
             c = ws.cell(row=r, column=j, value=v)
@@ -117,18 +118,18 @@ def main():
 
     # ---------- Por cadena ----------
     ws = wb.create_sheet('Por cadena')
-    header(ws, 1, ['Categoría', 'Cadena', 'SKUs', 'Mín $/kg', 'Mediana $/kg', 'Máx $/kg', 'Mediana pagando oferta $/kg', 'SKUs en promo'],
+    header(ws, 1, ['Categoría', 'Cadena', 'SKUs', 'Mín $/u', 'Mediana $/u', 'Máx $/u', 'Mediana pagando oferta $/u', 'SKUs en promo'],
            [16, 14, 8, 12, 14, 12, 16, 12])
     r = 1
     for cat in CATS:
         for ch in CHAINS:
-            R = [x for x in rows if x['cat'] == cat and x['cadena'] == ch and x['ppk_normal']]
+            R = [x for x in rows if x['cat'] == cat and x['cadena'] == ch and x['pu_normal']]
             if not R:
                 continue
-            pn = [x['ppk_normal'] for x in R]
-            pp = [x['ppk_promo_min'] or x['ppk_normal'] for x in R]
+            pn = [x['pu_normal'] for x in R]
+            pp = [x['pu_promo_min'] or x['pu_normal'] for x in R]
             r += 1
-            for j, v in enumerate([cat, ch, len(R), min(pn), q(pn, .5), max(pn), q(pp, .5), sum(1 for x in R if x['en_promo'])], 1):
+            for j, v in enumerate([f'{cat} (por {UNI[cat]})', ch, len(R), min(pn), q(pn, .5), max(pn), q(pp, .5), sum(1 for x in R if x['en_promo'])], 1):
                 c = ws.cell(row=r, column=j, value=v)
                 c.font, c.border = B_FONT, THIN
                 if 4 <= j <= 7:
@@ -138,20 +139,20 @@ def main():
 
     # ---------- Marcas ----------
     ws = wb.create_sheet('Marcas')
-    header(ws, 1, ['Categoría', 'Marca', 'SKUs'] + [f'{c} $/kg' for c in CHAINS] + ['Mediana $/kg', 'vs mediana categoría'],
+    header(ws, 1, ['Categoría', 'Marca', 'SKUs'] + [f'{c} $/u' for c in CHAINS] + ['Mediana $/u', 'vs mediana categoría'],
            [16, 22, 7] + [13] * len(CHAINS) + [14, 14])
     r = 1
     for cat in CATS:
-        R = [x for x in rows if x['cat'] == cat and x['ppk_normal']]
+        R = [x for x in rows if x['cat'] == cat and x['pu_normal']]
         if not R:
             continue
-        mcat = q([x['ppk_normal'] for x in R], .5)
-        marcas = sorted({x['marca'] for x in R}, key=lambda m: q([x['ppk_normal'] for x in R if x['marca'] == m], .5))
+        mcat = q([x['pu_normal'] for x in R], .5)
+        marcas = sorted({x['marca'] for x in R}, key=lambda m: q([x['pu_normal'] for x in R if x['marca'] == m], .5))
         for m in marcas:
             M = [x for x in R if x['marca'] == m]
             r += 1
-            vals = [cat, m, len(M)] + [q([x['ppk_normal'] for x in M if x['cadena'] == c], .5) for c in CHAINS]
-            vals += [q([x['ppk_normal'] for x in M], .5)]
+            vals = [cat, m, len(M)] + [q([x['pu_normal'] for x in M if x['cadena'] == c], .5) for c in CHAINS]
+            vals += [q([x['pu_normal'] for x in M], .5)]
             for j, v in enumerate(vals, 1):
                 c = ws.cell(row=r, column=j, value=v)
                 c.font, c.border = B_FONT, THIN
@@ -166,12 +167,12 @@ def main():
     # ---------- SKUs ----------
     ws = wb.create_sheet('SKUs')
     cols = [('Relevante', 'relevante', 10), ('Categoría', 'cat', 13), ('Cadena', 'cadena', 12), ('Marca', 'marca', 18),
-            ('SKU', 'sku', 52), ('Kg envase', 'kg', 9), ('Precio normal', 'p_normal', 12), ('Precio hoy', 'p_actual', 11),
-            ('Precio tarjeta', 'p_tarjeta', 11), ('$/kg normal', 'ppk_normal', 12), ('$/kg hoy', 'ppk_actual', 11),
-            ('$/kg mejor promo', 'ppk_promo_min', 13), ('Promo', 'promo', 16),
+            ('SKU', 'sku', 52), ('Cantidad envase', 'cantidad', 10), ('Unidad', 'unidad', 7), ('Precio normal', 'p_normal', 12), ('Precio hoy', 'p_actual', 11),
+            ('Precio tarjeta', 'p_tarjeta', 11), ('$/u normal', 'pu_normal', 12), ('$/u hoy', 'pu_actual', 11),
+            ('$/u mejor promo', 'pu_promo_min', 13), ('Promo', 'promo', 16),
             ('Con stock', 'stock', 9), ('Link', 'url', 40)]
     header(ws, 1, [c[0] for c in cols], [c[2] for c in cols])
-    rows_sorted = sorted(rows, key=lambda x: (CATS.index(x['cat']), x['ppk_normal'] or 10**9))
+    rows_sorted = sorted(rows, key=lambda x: (CATS.index(x['cat']), x['pu_normal'] or 10**9))
     for i, x in enumerate(rows_sorted, 2):
         for j, (_, k, _) in enumerate(cols, 1):
             v = x.get(k)
@@ -179,9 +180,9 @@ def main():
                 v = 'Sí' if v else 'No'
             c = ws.cell(row=i, column=j, value=v)
             c.font = B_FONT
-            if k in ('p_normal', 'p_actual', 'p_tarjeta', 'ppk_normal', 'ppk_actual', 'ppk_promo_min'):
+            if k in ('p_normal', 'p_actual', 'p_tarjeta', 'pu_normal', 'pu_actual', 'pu_promo_min'):
                 c.number_format = CLP
-            if k == 'kg':
+            if k == 'cantidad':
                 c.number_format = '0.000'
             if k == 'url' and v:
                 c.hyperlink = v
@@ -199,7 +200,7 @@ def main():
         for ch in CHAINS + ['TOTAL']:
             vals = []
             for f in fechas:
-                R = [x['ppk_normal'] for x in snaps[f] if x['cat'] == cat and x['ppk_normal'] and (ch == 'TOTAL' or x['cadena'] == ch)]
+                R = [x['pu_normal'] for x in snaps[f] if x['cat'] == cat and x['pu_normal'] and (ch == 'TOTAL' or x['cadena'] == ch)]
                 vals.append(q(R, .5))
             if not any(vals):
                 continue
@@ -216,7 +217,7 @@ def main():
                 a, b = get_column_letter(len(fechas) + 1), get_column_letter(len(fechas) + 2)
                 c = ws.cell(row=r, column=len(fechas) + 3, value=f'=IFERROR({b}{r}/{a}{r}-1,"")')
                 c.number_format, c.font, c.border = '+0.0%;-0.0%;0.0%', B_FONT, THIN
-    ws['A' + str(r + 2)] = 'Mediana $/kg precio normal por levantamiento.'
+    ws['A' + str(r + 2)] = 'Mediana del precio normal por unidad de medida (kg, litro o unidad según el producto), por levantamiento.'
     ws['A' + str(r + 2)].font = NOTE
     ws.freeze_panes = 'C2'
 
@@ -227,7 +228,7 @@ def main():
         'Fuente: sitios web de ' + ', '.join(CHAINS) + ', leídos con un navegador automático. Precio de la ubicación por defecto del sitio (normalmente RM); puede diferir de la tienda en regiones.',
         'Alcance: los productos definidos en config/productos.yml (' + ', '.join(CATS) + ').',
         'Precio normal = precio de lista publicado (tachado cuando hay oferta). Mejor promo = el menor entre precio oferta, precio por pack (5 x $3.000 → unitario) y precio con tarjeta (Tottus CMR).',
-        '$/kg: peso declarado por la cadena; si no existe, el peso del nombre. SKUs sin peso identificable no entran a medianas.',
+        '$/u = precio por unidad de medida: por kg, por litro o por unidad según el producto (ver la columna Unidad). Cantidad del envase: la que declara la cadena; si no existe, la del nombre. Sin cantidad identificable no entra a medianas.',
         'Las búsquedas son por palabra clave, no catálogo completo: puede faltar algún SKU. Santa Isabel no expone sus promos "lleva X por $Y".',
         'Mediana, P25 y P75 se calculan en Python al generar el archivo (no son fórmulas). Para marcar SKUs relevantes, agrega su link a canasta.csv.',
     ]

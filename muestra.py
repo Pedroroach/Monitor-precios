@@ -10,5 +10,5 @@ for r in d['rows']:
     por[r['cadena']].append(r)
 print(f'Muestra de {os.path.basename(f)}')
 for cad, rows in por.items():
-    for r in rows[:4]:
-        print(f"{cad} | {r['sku']} | hoy ${r['p_actual']} | normal ${r['p_normal']} | {r['kg']} kg | ${r['ppk_actual']}/kg | {r['url']}")
+    for r in rows[:3]:
+        print(f"{cad} | {r['cat']} | {r['sku']} | hoy ${r['p_actual']} | normal ${r['p_normal']} | {r['cantidad']} {r['unidad']} | ${r['pu_actual']}/{r['unidad']} | {r['url']}")

@@ -43,8 +43,12 @@ def productos():
         if nombre in vistos:
             raise SystemExit(f'config/productos.yml: el producto "{nombre}" está repetido.')
         vistos.add(nombre)
+        unidad = str(p.get('unidad', 'kg')).lower()
+        if unidad not in ('kg', 'l', 'un'):
+            raise SystemExit(f'config/productos.yml: "{nombre}" tiene unidad "{unidad}"; debe ser kg, l o un.')
         out.append(dict(
             nombre=nombre,
+            unidad=unidad,
             busquedas=[str(b) for b in p['busquedas']],
             incluir=_regex(p['incluir'], f'{nombre}.incluir'),
             excluir=_regex(p.get('excluir'), f'{nombre}.excluir'),

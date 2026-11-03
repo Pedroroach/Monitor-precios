@@ -4,7 +4,9 @@
 //
 // Cada producto se devuelve como:
 // {busqueda, nombre, marca, precio, precio_normal, ppk, ppk_normal, precio_tarjeta, promo,
-//  kg_unidad, formato, unidad, url, stock, categoria_web}
+//  kg_unidad, formato, unidad, url, stock, categoria_web, ppu, ppu_normal, ppu_unidad}
+// ppk = precio por kilo que publica la cadena. ppu = precio por unidad de medida que publica la cadena
+// en cualquier unidad (kg, litro, unidad), con ppu_unidad diciendo cuál.
 (() => {
   const MV = {};
   MV.num = s => s ? Number(String(s).replace(/[^0-9]/g, '')) || null : null;
@@ -12,7 +14,8 @@
     busqueda: q, nombre: r.name, marca: r.brand || '', precio: r.price ?? null, precio_normal: r.list ?? null,
     ppk: r.ppk ?? null, ppk_normal: r.ppkList ?? null, precio_tarjeta: r.card ?? null, promo: r.promo || '',
     kg_unidad: r.kgUn ?? null, formato: r.size || '', unidad: r.unit || '', url: r.url || '',
-    stock: r.stock === false ? 0 : 1, categoria_web: r.cat || ''});
+    stock: r.stock === false ? 0 : 1, categoria_web: r.cat || '',
+    ppu: r.ppu ?? null, ppu_normal: r.ppuList ?? null, ppu_unidad: r.ppuUnit || ''});
 
   // ---------- JUMBO ----------
   const grab = (s,start) => { let d=0,inS=false,esc=false; for (let k=start;k<s.length;k++){ const c=s[k]; if(inS){ if(esc)esc=false; else if(c==='\\')esc=true; else if(c==='"')inS=false; continue;} if(c==='"')inS=true; else if(c==='{')d++; else if(c==='}'){ d--; if(d===0) return s.slice(start,k+1);} } return null; };
@@ -25,7 +28,7 @@
       if (seen.has(p.productId)) continue; seen.add(p.productId); const it = p.items?.[0]; if (!it) continue;
       const promos = (it.promotions||[]).filter(x=>x.mQuantity>1||x.unitPrice<it.price).map(x=>x.mQuantity>1?`${x.mQuantity} x $${Math.round(x.unitPrice*x.mQuantity)}`:`$${x.unitPrice}`);
       const url = '/'+p.slug+'/p';
-      out.push({name:it.name, brand:p.brand, price:it.price, list:it.listPrice, ppk:it.ppumMeasurementUnit==='kg'?it.ppumPrice:null, ppkList:it.ppumMeasurementUnit==='kg'?it.ppumListPrice:null, unit:it.measurementUnit, kgUn:it.measurementUnitUn==='kg'?it.unitMultiplierUn:null, stock:it.stock, promo:promos.join(' | '), url, cat:catMap[url]||''}); }
+      out.push({name:it.name, brand:p.brand, price:it.price, list:it.listPrice, ppk:it.ppumMeasurementUnit==='kg'?it.ppumPrice:null, ppkList:it.ppumMeasurementUnit==='kg'?it.ppumListPrice:null, unit:it.measurementUnit, kgUn:it.measurementUnitUn==='kg'?it.unitMultiplierUn:null, ppu:it.ppumPrice, ppuList:it.ppumListPrice, ppuUnit:it.ppumMeasurementUnit, stock:it.stock, promo:promos.join(' | '), url, cat:catMap[url]||''}); }
     return out; };
   MV.jumboQ = async (q, page=1) => MV.nextProductos(await (await fetch('/busqueda?ft='+encodeURIComponent(q)+'&page='+page)).text());
 
@@ -45,11 +48,13 @@
   MV.unimarcQ = async (q) => {
     const r = await fetch('https://bff-unimarc-ecommerce.unimarc.cl/catalog/product/search',{method:'POST',headers:{'content-type':'application/json','channel':'UNIMARC','source':'web','version':'1.0.0'},body:JSON.stringify({from:'0',orderBy:'',searching:q,promotionsOnly:false,to:'79',userTriggered:true})});
     const j = await r.json(); const kgp = s => /x kg/i.test(s||'') ? MV.num(s) : null;
+    const pu = s => { const m = /x\s*(kg|lts?|litros?|l|un|unidad(?:es)?)\s*$/i.exec(s||''); return m ? {v: MV.num(s.slice(0, m.index)), u: m[1]} : {v: null, u: ''}; };
     return (j.availableProducts||[]).map(p => { const pr=p.price, it=p.item, pd=p.priceDetail||{};
       let promo=''; if (pd.promotionType==='mx$' && pd.discountPrice) promo=String(pd.discountPrice).replace(/\s+/g,' '); else if (pd.discountPercentage) promo='-'+String(pd.discountPercentage).replace('%','')+'%';
       const isMx = pd.promotionType==='mx$';
       return {name:it.nameComplete||it.name, brand:it.brand, price: isMx?MV.num(pr.price):(MV.num(pd.discountPrice)||MV.num(pr.price)), list:MV.num(pd.listPrice)||MV.num(pr.listPrice),
-        ppk: isMx?kgp(pr.ppum):(MV.num(pd.discountPpumPrice)||kgp(pr.ppum)), ppkList:kgp(pd.ppumListPrice)||kgp(pr.ppumListPrice), promo, size:it.netContent, unit:it.measurementUnit,
+        ppk: isMx?kgp(pr.ppum):(MV.num(pd.discountPpumPrice)||kgp(pr.ppum)), ppkList:kgp(pd.ppumListPrice)||kgp(pr.ppumListPrice),
+        ppu: isMx?pu(pr.ppum).v:(MV.num(pd.discountPpumPrice)||pu(pr.ppum).v), ppuList:(pu(pd.ppumListPrice).v||pu(pr.ppumListPrice).v), ppuUnit:pu(pr.ppum).u||pu(pd.ppumListPrice).u, promo, size:it.netContent, unit:it.measurementUnit,
         stock:pr.availableQuantity>0, url:it.slug, cat:(it.categories||[])[0]||''}; }); };
 
   // ---------- TOTTUS ----------
