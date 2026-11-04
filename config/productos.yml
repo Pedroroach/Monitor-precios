@@ -47,7 +47,8 @@ productos:
     unidad: kg
     busquedas: [mantequilla con sal, mantequilla colun, mantequilla quillayes]
     incluir: ['^mantequilla']
-    excluir: [sin sal, mani, cacahuate, almendra, margarina, ghee, ajo]
+    requiere: [con sal]
+    excluir: [sin sal, sin lactosa, mani, cacahuate, almendra, margarina, ghee, ajo]
     marcas: [colun, quillayes]
     referencia: 'Alvi $2.450 y $2.390'
 

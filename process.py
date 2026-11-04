@@ -187,7 +187,8 @@ def calcular(r, c, prod):
                 cantidad=round(q, 3) if q else None, cantidad_dudosa=dudoso, p_normal=lst, p_actual=price, p_tarjeta=card,
                 pu_normal=pu_n, pu_actual=pu_c, pu_promo_min=best if on_promo else None,
                 promo=(promo or '').strip(), en_promo=on_promo, stock=bool(r['stock']),
-                url=url_completa(r['url'], c['url_base']), busqueda=r['busqueda'])
+                url=url_completa(r['url'], c['url_base']), busqueda=r['busqueda'],
+                categoria_web=str(r.get('categoria_web') or ''))
 
 
 def main():

@@ -22,7 +22,8 @@ for p in productos:
     print(f"\nPRODUCTO {p['nombre']} (por {p['unidad']}) — se quedan {len(R)}")
     for r in R:
         marca = ' [cantidad dudosa]' if r['cantidad_dudosa'] else ''
-        print(f"  OK  | {r['cadena']} | {r['sku']} | ${r['p_actual']} | {r['cantidad']} {r['unidad']} | ${r['pu_actual']}/{r['unidad']}{marca}")
+        cw = f" | categoría web: {r.get('categoria_web', '')}" if p['solo_congelado'] else ''
+        print(f"  OK  | {r['cadena']} | {r['sku']} | ${r['p_actual']} | {r['cantidad']} {r['unidad']} | ${r['pu_actual']}/{r['unidad']}{marca}{cw}")
     for q in p['busquedas']:
         D = desc.pop(q, [])
         print(f"  búsqueda '{q}': {len(D)} descartados")
