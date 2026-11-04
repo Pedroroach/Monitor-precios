@@ -136,19 +136,19 @@ productos:
     unidad: kg
     busquedas: [frambuesa congelada]
     incluir: [frambuesa]
-    excluir: [mermelada, jugo, nectar, helado, yogur, salsa, galleta, chocolate, bebida, sabor, deshidratad, liofiliz, mix, mezcla, berries, frutilla, mora, arandano, '\bte\b']
+    excluir: [mermelada, jugo, nectar, helado, yogur, salsa, galleta, chocolate, bebida, sabor, deshidratad, liofiliz, mix, mezcla, berries, frutilla, mora, arandano, bombon, barra, suspiro, postre, paleta, '\bte\b']
     solo_congelado: true
 
   - nombre: Maracuyá congelado
     unidad: kg
     busquedas: [maracuya congelado, pulpa de maracuya]
     incluir: [maracuya]
-    excluir: [jugo, nectar, bebida, helado, yogur, sabor, galleta, salsa, mermelada, mix, mezcla, '\bte\b']
+    excluir: [jugo, nectar, bebida, helado, yogur, sabor, galleta, salsa, mermelada, mix, mezcla, bombon, barra, postre, paleta, '\bte\b']
     solo_congelado: true
 
   - nombre: Lúcuma congelada
     unidad: kg
     busquedas: [lucuma congelada, pulpa de lucuma]
     incluir: [lucuma]
-    excluir: [helado, yogur, sabor, galleta, torta, manjar, harina, polvo, bebida, mix]
+    excluir: [helado, yogur, sabor, galleta, torta, manjar, harina, polvo, bebida, mix, bombon, barra, postre, paleta]
     solo_congelado: true

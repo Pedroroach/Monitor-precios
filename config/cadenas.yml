@@ -5,7 +5,9 @@
 #     pedir    = abre el sitio una vez y desde ahí pide los resultados de cada búsqueda
 #     navegar  = abre cada búsqueda como una persona (Líder no permite la otra forma)
 #   max_paginas: cuántas páginas de resultados leer por búsqueda, como máximo
-#   congelado_si_categoria: cómo reconoce la cadena un producto congelado en su categoría web
+#   congelado_si_categoria: cómo reconoce la cadena un producto congelado en su categoría web.
+#     Jumbo y Santa Isabel llaman a su departamento "Lácteos, Huevos y Congelados" (ahí también hay jaleas y postres
+#     refrigerados), así que se exige "congelad" DESPUÉS del primer "/": "… / Frutas y Pulpas Congeladas / …".
 #   url_diagnostico: (opcional) qué página revisar si la cadena no trae nada, para saber por qué
 #
 # Agregar una cadena nueva requiere además escribirle su lector en extractores.js.
@@ -19,7 +21,7 @@ cadenas:
     url_base: https://www.jumbo.cl
     url_diagnostico: /busqueda?ft={q}
     max_paginas: 2
-    congelado_si_categoria: congelad
+    congelado_si_categoria: '/[^/]*congelad'
 
   santaisabel:
     nombre: Santa Isabel
@@ -29,7 +31,7 @@ cadenas:
     url_base: https://www.santaisabel.cl
     url_diagnostico: /busqueda?ft={q}
     max_paginas: 2
-    congelado_si_categoria: congelad
+    congelado_si_categoria: '/[^/]*congelad'
 
   unimarc:
     nombre: Unimarc
