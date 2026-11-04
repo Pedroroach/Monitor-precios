@@ -49,7 +49,10 @@ por etapas: 1 nube y configuración · 2 productos y cadenas de Pedro · 3 autom
   queso crema Green Bay/Philadelphia/Cuisine & Co, huevos extra; nuevos: limón sutil, galletas de vino Dos en Uno,
   frambuesa, maracuyá y lúcuma congeladas. Fuera: manjar y harina con polvos. Pendiente confirmar si usa azúcar flor,
   leche entera, chocolate de cobertura, polvos de hornear y esencia de vainilla (no los mencionó).
-  Ella compra varias cosas en Alvi (mayorista, no está en el monitor) y fruta congelada fuera de supermercados. Cadenas: Jumbo, Santa Isabel,
+  Ella compra varias cosas en Alvi (mayorista, no está en el monitor) y fruta congelada fuera de supermercados.
+  No se encuentran en Jumbo/Santa Isabel/Unimarc: cacao amargo Gourmet, lúcuma congelada, queso crema Green Bay.
+- Congelados: Jumbo y Santa Isabel ponen jaleas y postres refrigerados bajo "Lácteos, Huevos y Congelados";
+  por eso su regla exige "congelad" en una subcategoría ('/[^/]*congelad'). Cadenas: Jumbo, Santa Isabel,
   Unimarc. Tottus y Líder apagadas (bloquean desde GitHub), se decide en la Etapa 3.
 
 ## Límites conocidos

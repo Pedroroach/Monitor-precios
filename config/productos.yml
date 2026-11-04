@@ -143,7 +143,7 @@ productos:
     unidad: kg
     busquedas: [maracuya congelado, pulpa de maracuya]
     incluir: [maracuya]
-    excluir: [jugo, nectar, bebida, helado, yogur, sabor, galleta, salsa, mermelada, mix, mezcla, bombon, barra, postre, paleta, '\bte\b']
+    excluir: [jugo, nectar, bebida, helado, yogur, sabor, galleta, salsa, mermelada, mix, mezcla, mango, bombon, barra, postre, paleta, '\bte\b']
     solo_congelado: true
 
   - nombre: Lúcuma congelada
