@@ -53,6 +53,9 @@ def productos():
             incluir=_regex(p['incluir'], f'{nombre}.incluir'),
             excluir=_regex(p.get('excluir'), f'{nombre}.excluir'),
             requiere=_regex(p.get('requiere'), f'{nombre}.requiere'),
+            marcas=_regex(p.get('marcas'), f'{nombre}.marcas'),
+            excluir_marcas=_regex(p.get('excluir_marcas'), f'{nombre}.excluir_marcas'),
+            referencia=str(p.get('referencia') or ''),
             solo_congelado=bool(p.get('solo_congelado')),
             asumir_congelado=bool(p.get('asumir_congelado')),
         ))

@@ -7,8 +7,9 @@ por etapas: 1 nube y configuración · 2 productos y cadenas de Pedro · 3 autom
 4 sugerido de dónde comprar · 5 página de precios en la app (app-pasteleria-matesic en Vercel).
 
 ## Cómo funciona
-- `config/productos.yml`: canasta de repostería. Por producto: unidad de comparación (kg, l o un), qué se busca
-  (busquedas), qué se queda (incluir, requiere), qué se bota (excluir, excluir_global) y si se exige congelado.
+- `config/productos.yml`: insumos de la pastelería de la mamá de Pedro. Por producto: unidad de comparación (kg, l o un),
+  qué se busca (busquedas), qué se queda (incluir, requiere, marcas), qué se bota (excluir, excluir_marcas, excluir_global),
+  si se exige congelado y `referencia` (lo que paga hoy y dónde, para la Etapa 4). Marcas se comparan contra marca + nombre.
   Si varios productos calzan con un nombre, se prueba primero el de la búsqueda que lo trajo. Mayúsculas y tildes no importan; cada palabra es un pedazo de texto (o expresión regular).
 - `config/cadenas.yml`: qué cadenas se leen, si están activas y cómo se leen (`pedir` o `navegar`).
 - `scraper.py` + `extractores.js`: abre cada cadena en Chromium sin ventana y guarda TODO lo que trae cada búsqueda
@@ -43,8 +44,12 @@ por etapas: 1 nube y configuración · 2 productos y cadenas de Pedro · 3 autom
 - Desde esta sesión en la nube de Claude no se puede entrar a los sitios ni descargar los artifacts de Actions:
   las pruebas se leen desde el log de la ejecución (gh api .../actions/jobs/<id>/logs).
 
-- Etapa 2 (en curso): canasta de 15 productos de repostería propuesta por Claude porque Pedro pidió elegir productos
-  alineados con una repostería; Pedro la revisa con la lista de encontrados y descartados. Cadenas: Jumbo, Santa Isabel,
+- Etapa 2 (en curso): 18 productos según las respuestas de la mamá de Pedro (2026-11-03): marcas que usa, Máxima fuera
+  en azúcar, mantequilla con sal Colun/Quillayes, crema Soprole normal, leche condensada Nestlé, cacao Gourmet,
+  queso crema Green Bay/Philadelphia/Cuisine & Co, huevos extra; nuevos: limón sutil, galletas de vino Dos en Uno,
+  frambuesa, maracuyá y lúcuma congeladas. Fuera: manjar y harina con polvos. Pendiente confirmar si usa azúcar flor,
+  leche entera, chocolate de cobertura, polvos de hornear y esencia de vainilla (no los mencionó).
+  Ella compra varias cosas en Alvi (mayorista, no está en el monitor) y fruta congelada fuera de supermercados. Cadenas: Jumbo, Santa Isabel,
   Unimarc. Tottus y Líder apagadas (bloquean desde GitHub), se decide en la Etapa 3.
 
 ## Límites conocidos

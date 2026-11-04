@@ -1,4 +1,4 @@
-# Qué productos cotiza el monitor: canasta de repostería.
+# Qué productos cotiza el monitor: insumos de la pastelería (según lo que respondió la mamá de Pedro, 2026-11-03).
 #
 # Cada producto tiene:
 #   unidad:     cómo se compara el precio: kg (por kilo), l (por litro) o un (por unidad)
@@ -6,11 +6,13 @@
 #   incluir:    el nombre debe tener al menos una de estas palabras (o pedazos de palabra)
 #   requiere:   (opcional) el nombre debe tener además al menos una de estas
 #   excluir:    (opcional) si el nombre tiene alguna de estas, se descarta
-#   solo_congelado / asumir_congelado: (opcional) para productos que deben ser congelados
+#   marcas:     (opcional) solo estas marcas
+#   excluir_marcas: (opcional) estas marcas no
+#   referencia: (opcional) lo que paga hoy y dónde, para comparar en la Etapa 4
+#   solo_congelado: (opcional) true = descarta lo que no sea congelado
 #
 # Las mayúsculas y los tildes no importan: "azucar" también encuentra "Azúcar".
 # '^' al inicio = el nombre debe EMPEZAR con eso ('^azucar' no deja pasar "Cereal con azúcar").
-# '\b' marca palabra completa: '\bcon sal\b'.
 
 # Palabras que descartan un producto en cualquier categoría
 excluir_global:
@@ -25,19 +27,14 @@ productos:
     incluir: ['^harina']
     requiere: [sin polvo]
     excluir: [integral, maiz, almendra, coco, arroz, avena, garbanzo, sin gluten, orgran, premezcla, mezcla]
-
-  - nombre: Harina con polvos de hornear
-    unidad: kg
-    busquedas: [harina con polvos de hornear]
-    incluir: ['^harina']
-    requiere: [con polvo]
-    excluir: [integral, maiz, almendra, coco, arroz, avena, garbanzo, sin gluten, orgran, premezcla, mezcla]
+    referencia: 'cualquier marca; la mejor es Selecta'
 
   - nombre: Azúcar granulada
     unidad: kg
     busquedas: [azucar granulada]
     incluir: ['^azucar']
     excluir: [flor, impalpable, glass, rubia, morena, mascabo, rubio, organic, dorad, light, stevia, sucralosa, endulzante, cubo, sachet, sobre]
+    excluir_marcas: [maxima]   # muy gruesa y muy café
 
   - nombre: Azúcar flor
     unidad: kg
@@ -46,18 +43,21 @@ productos:
     requiere: [flor, impalpable, glass]
     excluir: [light, stevia]
 
-  - nombre: Mantequilla sin sal
+  - nombre: Mantequilla con sal
     unidad: kg
-    busquedas: [mantequilla sin sal]
+    busquedas: [mantequilla con sal, mantequilla colun, mantequilla quillayes]
     incluir: ['^mantequilla']
-    requiere: [sin sal]
-    excluir: [mani, cacahuate, almendra, margarina, ghee, ajo]
+    excluir: [sin sal, mani, cacahuate, almendra, margarina, ghee, ajo]
+    marcas: [colun, quillayes]
+    referencia: 'Alvi $2.450 y $2.390'
 
-  - nombre: Huevos
+  - nombre: Huevos extra
     unidad: un
-    busquedas: [huevos]
+    busquedas: [huevos extra]
     incluir: ['^huevo']
+    requiere: [extra]
     excluir: [codorniz, vegan, chocolate, pascua, sorpresa, polvo, deshidratad, liquid, clara, yema, cocido, duro]
+    referencia: 'Agrícola Omega 3: 7 bandejas de 30 a $31.000-$43.000'
 
   - nombre: Leche entera
     unidad: l
@@ -66,38 +66,36 @@ productos:
     requiere: [entera]
     excluir: [polvo, condensada, evaporada, sin lactosa, cultivada, fermentada, sabor, chocolate, frutilla, vainilla, almendra, avena, soya, coco, semi, descremada, cabra, proteina]
 
-  - nombre: Crema de leche
+  - nombre: Crema para batir Soprole
     unidad: l
-    busquedas: [crema para batir, crema de leche]
+    busquedas: [crema para batir, crema de leche soprole]
     incluir: ['^crema']
     requiere: [batir, de leche]
-    excluir: [acida, vegetal, spray, chantilly, pastelera, facial, corporal, manos]
+    excluir: [acida, vegetal, spray, chantilly, pastelera, light, sin lactosa, facial, corporal, manos]
+    marcas: [soprole]
+    referencia: 'Alvi (siempre el mejor precio)'
 
-  - nombre: Leche condensada
+  - nombre: Leche condensada Nestlé
     unidad: kg
-    busquedas: [leche condensada]
+    busquedas: [leche condensada nestle, leche condensada]
     incluir: ['^leche condensada']
-    excluir: [galleta, alfajor, manjar]
-
-  - nombre: Manjar
-    unidad: kg
-    busquedas: [manjar]
-    incluir: ['^manjar']
-    excluir: [alfajor, galleta, torta, helado, barra, bombon, chocolate, coco]
+    excluir: [galleta, alfajor, manjar, sin lactosa, light, sin azucar]
+    marcas: [nestle]
+    referencia: 'compra en promoción bajo $1.590 (Jumbo o Líder)'
 
   - nombre: Chocolate para repostería
     unidad: kg
     busquedas: [chocolate reposteria, chocolate cobertura]
-    # cobertura o chocolate de repostería; el nombre debe empezar así (deja fuera waffles, brownies, tortas)
     incluir: ['^cobertura.*(chocolat|bitter)', '^chocolate.*(reposter|cobertura|fundir)']
     excluir: [glaseado, helado, galleta, salsa, relleno]
 
-  - nombre: Cacao amargo en polvo
+  - nombre: Cacao amargo Gourmet
     unidad: kg
-    busquedas: [cacao amargo]
+    busquedas: [cacao amargo gourmet, cacao amargo]
     incluir: ['^cacao']
     requiere: [amargo, polvo, 100]
     excluir: [bebida, instant, cereal, galleta, barra, manteca, nibs]
+    marcas: [gourmet]
 
   - nombre: Polvos de hornear
     unidad: kg
@@ -113,6 +111,43 @@ productos:
 
   - nombre: Queso crema
     unidad: kg
-    busquedas: [queso crema]
+    busquedas: [queso crema, queso crema green bay, queso crema philadelphia]
     incluir: ['^queso crema']
-    excluir: [ciboulette, finas hierbas, salmon, ajo, pimienta, cebolla, aceituna, merken, tomate, salame, morron, jamon]
+    excluir: [light, reducido, calorias, sin lactosa, ciboulette, finas hierbas, salmon, ajo, pimienta, cebolla, aceituna, merken, tomate, salame, morron, jamon]
+    marcas: ['green ?bay', philadelphia, cuisine]
+    referencia: 'Green Bay 1,36 kg a $13.090 (la que prefiere); Philadelphia y Cuisine & Co también sirven'
+
+  - nombre: Limón sutil
+    unidad: kg
+    busquedas: [limon sutil]
+    incluir: ['^limon']
+    requiere: [sutil]
+    excluir: [jugo, sabor, galleta, helado, bebida, aceite, esencia, aderezo, '\bte\b']
+
+  - nombre: Galletas de vino Dos en Uno
+    unidad: kg
+    busquedas: [galletas de vino]
+    incluir: ['galleta.*vino']
+    marcas: [dos en uno]
+    referencia: 'Alvi (cree que siempre es el mejor precio)'
+
+  - nombre: Frambuesas congeladas
+    unidad: kg
+    busquedas: [frambuesa congelada]
+    incluir: [frambuesa]
+    excluir: [mermelada, jugo, nectar, helado, yogur, salsa, galleta, chocolate, bebida, sabor, deshidratad, liofiliz, mix, mezcla, berries, frutilla, mora, arandano, '\bte\b']
+    solo_congelado: true
+
+  - nombre: Maracuyá congelado
+    unidad: kg
+    busquedas: [maracuya congelado, pulpa de maracuya]
+    incluir: [maracuya]
+    excluir: [jugo, nectar, bebida, helado, yogur, sabor, galleta, salsa, mermelada, mix, mezcla, '\bte\b']
+    solo_congelado: true
+
+  - nombre: Lúcuma congelada
+    unidad: kg
+    busquedas: [lucuma congelada, pulpa de lucuma]
+    incluir: [lucuma]
+    excluir: [helado, yogur, sabor, galleta, torta, manjar, harina, polvo, bebida, mix]
+    solo_congelado: true

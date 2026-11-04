@@ -101,6 +101,11 @@ def url_completa(url, base):
 # ---------- filtro ----------
 def filtro(r, c, p, nom):
     """None si el producto p acepta la fila, o el motivo si no."""
+    marca_nom = sin_tildes(r.get('marca') or '') + ' | ' + nom  # la marca puede venir en su campo o en el nombre
+    if p['excluir_marcas'] and (m := p['excluir_marcas'].search(marca_nom)):
+        return f'{p["nombre"]}: marca descartada "{m.group(0)}"'
+    if p['marcas'] and not p['marcas'].search(marca_nom):
+        return f'{p["nombre"]}: marca "{r.get("marca") or "?"}" no está en la lista'
     if p['excluir'] and (m := p['excluir'].search(nom)):
         return f'{p["nombre"]}: excluir "{m.group(0)}"'
     if p['requiere'] and not p['requiere'].search(nom):
